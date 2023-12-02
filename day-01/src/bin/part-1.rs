@@ -1,37 +1,29 @@
 use std::fs;
 
-const PATH: &str = "/home/nixpig/projects/advent-of-code-2023/day-01/input.txt";
-
 fn main() {
-    let input = fs::read_to_string(PATH).unwrap();
+    let input = "/Users/jaward/projects/advent-of-code-2023/day-01/input.txt";
 
-    let mut calibration_values: Vec<usize> = vec![];
+    let input = fs::read_to_string(input).unwrap();
 
-    for line in input.lines() {
-        let mut cal = String::new();
+    let total = input
+        .lines()
+        .map(|x| {
+            let tens =
+                str::parse::<usize>(&x.chars().find(|c| c.is_ascii_digit()).unwrap().to_string())
+                    .unwrap();
+            let units = str::parse::<usize>(
+                &x.chars()
+                    .rev()
+                    .find(|c| c.is_ascii_digit())
+                    .unwrap()
+                    .to_string(),
+            )
+            .unwrap();
 
-        for ch in line.chars() {
-            if ch.is_ascii_digit() {
-                cal.push_str(&ch.to_string());
-                break;
-            }
-        }
+            tens * 10 + units
+        })
+        .reduce(|a, c| a + c)
+        .unwrap();
 
-        for ch in line.chars().rev() {
-            if ch.is_ascii_digit() {
-                cal.push_str(&ch.to_string());
-                break;
-            }
-        }
-
-        let cali = str::parse::<usize>(&cal);
-
-        if let Ok(c) = cali {
-            calibration_values.push(c);
-        }
-    }
-
-    let total = calibration_values.into_iter().reduce(|a, c| a + c).unwrap();
-
-    println!("{:?}", total);
+    println!("{total}");
 }
